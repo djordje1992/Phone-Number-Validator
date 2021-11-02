@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 
 export class AppComponent {
-    private access_key:string = "fe0f7d1b1e08cdfb4650f3342775d679";
+    private access_key:string = "e205f9b8e41ca8cb7093a3df342d5293";
     private countryCode:string = '+46'; 
    
     phoneNo:string = '';
