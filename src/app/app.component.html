@@ -1,32 +1,38 @@
 <html>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
   <div id="phone">
     <h1>Enter phone number:</h1>
 
     <form>   
         <div class="form-group" (click)="toggleError()">
-        <input required id="field" type="text" ng2TelInput [ng2TelInputOptions]="{initialCountry: 'se' , 
-          separateDialCode:true}" (countryChange)="countryChange($event)" (hasError)="hasError($event)" 
-          ngModel name="number" #number="ngModel" class="form-control"
-          [ngStyle]="{'border': error? '4px solid rgb(217, 22, 22)' : '4px solid #04233f'}"
-          
+        <input required id="field" type="text" 
+          ng2TelInput [ng2TelInputOptions]="{initialCountry: 'se' , 
+          separateDialCode:true}" 
+          (countryChange)="countryChange($event)" 
+          (keydown)="enterSubmit($event)"
+          [(ngModel)]="phoneNo" name="number" class="form-control"
+          [ngStyle]="{'border': error? '4px solid rgb(217, 22, 22)' : '4px solid #04233f'}"        
         />
         </div>
      
-      <button (click)="getInfo(number.value)" class="btn btn-primary">VERIFY</button>
+      <button type="button" (click)="getInfo()" class="btn btn-primary">SUBMIT</button>
     
-      <div class="output"> 
-       
-        <mat-icon class="success" *ngIf="success">check_circle</mat-icon>
+      <div class="output">  
+
+        <mat-icon class="success" *ngIf="valid">check_circle</mat-icon>
         
          <p class="valid">  {{ output }} </p>
          <p class="info">  {{ location }} </p>
          <p class="info">  {{ carrier }} </p>
 
-         <mat-icon class="error" *ngIf="invalid">error</mat-icon>      
+         <mat-icon class="error" *ngIf="warning">error</mat-icon>    
+         <mat-icon class="error" *ngIf="invalid">cancel</mat-icon>
+
       </div>
+
     </form>
  
-</div>
+  </div>
 
 </html>
