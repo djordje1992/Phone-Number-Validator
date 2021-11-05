@@ -11,16 +11,17 @@ export class AppComponent {
     private countryCode:string = '+46'; 
    
     phoneNo:string = '';
-    error:boolean = false;
-    warning:boolean = false;
-    valid:boolean = false; 
-    invalid:boolean = false;
     output:string = '';
     location:string = '';
     carrier:string = '';
+
+    error:boolean = false; 
+    warning:boolean = false
+    valid:boolean = false; 
+    invalid:boolean = false; 
     
-    countryChange(c: any) {
-      this.countryCode = '+' + c.dialCode;
+    countryChange(e: any) {
+      this.countryCode = '+' + e.dialCode;
     }
 
     toggleError() {
@@ -37,18 +38,17 @@ export class AppComponent {
       this.output = '';
     }
 
-    checkCountryCode(no: string) {
-      if (no.charAt(0) == "+") {
-        this.countryCode = '';
+    enterSubmit(e: any) {
+      if (e.keyCode == 13) {
+        this.getInfo();
       }
     }
 
-    enterSubmit(e: any) {
-     
-      if (e.keyCode == 13) {
-        this.phoneNo.replace(/\n/g, '');
-        this.getInfo();
-      }
+    remove() {
+      let temp = this.phoneNo.split(' ');
+      this.phoneNo = temp.join('');
+      temp = this.phoneNo.split('-');
+      this.phoneNo= temp.join('');
     }
 
     parseData(data: any) {
@@ -86,14 +86,15 @@ export class AppComponent {
     getInfo() {
 
         this.reset(); 
+        this.remove();
+        console.log(this.phoneNo)
+        
+        if (this.checkInput()) {
 
-        if (this.phoneNo != '' && (/^\d+$/.test(this.phoneNo))) {
-
-            this.checkCountryCode(this.phoneNo)
             fetch("http://apilayer.net/api/validate?access_key=" + this.access_key + "&number=" + this.countryCode + this.phoneNo)
             .then(response => response.json())
             .then((data) => {
-            
+              
               this.parseData(data);
             
             }).catch((error) => {
@@ -105,5 +106,27 @@ export class AppComponent {
           this.error = true;
           this.warning = true;
         }
+  
     } 
+    isNumeric(num: string) {
+      if (/^\d+$/.test(num)) {
+          return true
+      }
+  
+      return false
+  }
+  
+  checkInput() {
+  
+      if (this.phoneNo != "") { 
+          if (this.phoneNo.charAt(0) == "+" && this.isNumeric(this.phoneNo.substr(1))) {
+              this.countryCode='';
+              return true
+          }
+          if (this.isNumeric(this.phoneNo)) {
+              return true
+          }
+      }
+      return false
+  }
 }
